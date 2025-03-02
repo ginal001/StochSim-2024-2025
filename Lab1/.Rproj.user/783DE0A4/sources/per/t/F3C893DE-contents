@@ -1,0 +1,166 @@
+---
+title: "Lab 1"
+output: html_notebook
+---
+
+Najpierw uczymy się generowania zmiennych losowych jednostajnych.
+
+```{r generowanie zmiennych jednostajnych}
+n <- 12
+
+set.seed(10)
+x <- runif(n)
+x
+```
+Przybliżamy rozkład normalny używając CTG.
+```{r generowanie normalnego}
+normal_variable <- (sum(x) - n/2) / (sqrt(n/12))
+normal_variable
+```
+Zapisujemy to wszystko jako funkcję. Zwraca ona realizację rozkładu normalnego.
+```{r funkcja do rozkladu normalnego}
+normal <- function(){
+  n <- 12
+  x <- runif(n)
+  normal_variable <- (sum(x) - n/2) / (sqrt(n/12))
+  return(normal_variable)
+}
+normal()
+```
+
+Generujemy m zmiennych losowych o rozkładzie normalnym, używając naszej funkcji.
+```{r uzycie funkcji}
+m <- 200
+normal_vector <- vector()
+for (i in 1:m){
+  normal_vector <- c(normal_vector, normal())
+}
+```
+
+Dalej plotujemy nasze m realizacji rozkładu normalnego.
+```{r plotowanie wygenerowanych zmiennych}
+{
+hist(normal_vector, prob = TRUE)
+rug(normal_vector)
+curve(dnorm, from = -3, to = 3, add = TRUE)
+}
+```
+Rysujemy dystrybuantę empiryczną.
+```{r dystrybuanta empiryczna}
+ecdf(normal_vector)
+{
+plot(ecdf(normal_vector))
+curve(pnorm, from = -3, to = 3, add = TRUE)
+}
+ks.test(normal_vector, pnorm)
+```
+
+
+Przechodzimy do innego zadania i definiujemy schemat Polya
+```{r generowanie zmiennych bernoulliego}
+bern <- function(alfa, beta){
+  x <- runif(1)
+  return(as.integer(x < alfa / (alfa + beta)))
+}
+
+experiment <- function(alfa, beta, n){
+X <- vector()
+for (i in 1:n){
+  Xn <- bern(alfa + sum(X), beta + length(X) - sum(X))
+  X <- c(X, Xn)
+}
+
+S <- cumsum(X)
+return(S)
+}
+```
+
+Wykonajmy eksperyment Polyi.
+```{r powtarzanie eksperymentu}
+alfa <- 1
+beta <- 1
+n <- 2000
+data_for_plot <- data.frame(x = 1:n)
+
+for(i in 1:20){
+  results <- experiment(alfa, beta, n)
+  name <- paste0("experiment", i)
+  data_for_plot[name] <- results / (1:n)
+}
+
+# Tworzymy wykres z wykorzystaniem matplot
+matplot(data_for_plot$x, data_for_plot[, -1], type = "l", lty = 1,
+        xlab = "Indeks", ylab = "Wynik/Indeks", main = "Wyniki eksperymentów")
+```
+
+```{r generowanie beta}
+generate_betas <- function(alfa, beta, n, m){
+ betas <- vector()
+
+  for(i in 1:m){
+    results <- experiment(alfa, beta, n)
+    betas <- c(betas, results[n]/n)
+  }
+ return(betas)
+}
+
+my_betas <- generate_betas(1, 1, 200, 200)
+ks.test(my_betas, "pbeta", shape1 = 1, shape2 = 1)
+
+my_betas <- generate_betas(3, 2, 200, 200)
+ks.test(my_betas, "pbeta", shape1 = 3, shape2 = 2)
+
+my_betas <- generate_betas(11, 1, 200, 200)
+ks.test(my_betas, "pbeta", shape1 = 11, shape2 = 1)
+
+my_betas <- generate_betas(0.5, 0.5, 200, 200)
+ks.test(my_betas, "pbeta", shape1 = 0.5, shape2 = 0.5)
+
+my_betas <- generate_betas(5, 31, 200, 200)
+ks.test(my_betas, "pbeta", shape1 = 5, shape2 = 31)
+```
+
+Przejdźmy do następnego zadania. Wyczyścmy środowisko.
+```{r czyszczenie środowiska}
+rm(list = ls())
+```
+
+Robimy ćwiczenie 1.8 ze skryptu. Rozpatrujemy w nim prawo arcusa sinusa i definiujemy zmienną losową $T_n$ -- procent czasu w którym byliśmy na plusie w ciągu gier. Zdefiniujmy funkcję random_walk, w której argument distribution mówi z jakiego rozkładu losujemy $X_i$.
+```{r definicja Sn i Tn}
+
+random_walk <- function(distribution, n, ...){
+Sn <- cumsum(distribution(n, ...))
+Sn <- c(0, Sn)
+Tn <- cumsum(as.integer(Sn > 0)) / (1:(n+1))
+
+return(list(Sn = Sn, Tn = Tn))
+}
+
+two_pointed <- function(n, alfa, beta){
+  x <- runif(n)
+  return(as.integer(x < alfa / (alfa + beta))*2 - 1)
+}
+
+normal_walk <- random_walk(rnorm, 500, mean = 0, sd = 1)
+unif_walk <- random_walk(runif, 500, min = -1, max = 1)
+bern_walk <- random_walk(two_pointed, 500, alfa = 1, beta = 1)
+
+plot(normal_walk$Sn, type = "l", ylab = "Trajectory") + abline(h = 0) 
+plot(unif_walk$Sn, type = "l", ylab = "Trajectory") + abline(h = 0)
+plot(bern_walk$Sn, type = "l", ylab = "Trajectory") + abline(h = 0)
+
+
+generate_Tn <- function(distribution, n, m, ...){
+result <- vector()
+for (i in (1:m)){
+  walk <- random_walk(distribution, n, ...)
+  result <- c(result, walk$Tn[length(walk$Tn)])
+}
+return(result)
+}
+
+realization_Tn <- generate_Tn(rnorm, 500, 50, mean = 0, sd = 1)
+ks.test(realization_Tn, "pbeta", shape1 = 1/2, shape2 = 1/2)
+
+```
+

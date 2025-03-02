@@ -1,0 +1,5 @@
+"0","m <- 200"
+"0","normal_vector <- vector()"
+"0","for (i in 1:m){"
+"0","  normal_vector <- c(normal_vector, normal())"
+"0","}"
