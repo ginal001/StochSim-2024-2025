@@ -127,7 +127,6 @@ rm(list = ls())
 
 Robimy ćwiczenie 1.8 ze skryptu. Rozpatrujemy w nim prawo arcusa sinusa i definiujemy zmienną losową $T_n$ -- procent czasu w którym byliśmy na plusie w ciągu gier. Zdefiniujmy funkcję random_walk, w której argument distribution mówi z jakiego rozkładu losujemy $X_i$.
 ```{r definicja Sn i Tn}
-
 random_walk <- function(distribution, n, ...){
 Sn <- cumsum(distribution(n, ...))
 Sn <- c(0, Sn)
@@ -135,6 +134,7 @@ Tn <- cumsum(as.integer(Sn > 0)) / (1:(n+1))
 
 return(list(Sn = Sn, Tn = Tn))
 }
+
 
 two_pointed <- function(n, alfa, beta){
   x <- runif(n)
@@ -161,6 +161,52 @@ return(result)
 
 realization_Tn <- generate_Tn(rnorm, 500, 50, mean = 0, sd = 1)
 ks.test(realization_Tn, "pbeta", shape1 = 1/2, shape2 = 1/2)
+```
 
+Przejdźmy do następnego zadania. Wyczyścmy środowisko.
+```{r czyszczenie środowiska2}
+rm(list = ls())
+```
+
+Tworzymy sobie zmienne dyskretne o ustalonych prawdopodobieństwach.
+```{r}
+argmin <- vector()
+
+for (i in 1:10000){
+W = rexp(3, rate = c(1, 2, 5))
+argmin <- c(argmin, which.min(W))
+}
+
+table(argmin) / length(argmin)
+
+# Function for generating discrete variables
+generate_discretes <- function(n, freq){
+  argmin <- vector()
+  for (i in 1:n){
+    W = rexp(length(freq), rate = freq)
+    argmin <- c(argmin, which.min(W))
+  }
+  return(argmin)
+}
+
+n <- 1000
+vector1 <- c(1,2,3)
+vector2 <- c(1, 1, 10, 2, 3)
+vector3 <- c(8, 12)
+
+discrete_realization <- generate_discretes(n, vector1)
+table(discrete_realization) / n
+
+sdiscrete_realization <- generate_discretes(n, vector2)
+table(discrete_realization) / n
+
+discrete_realization <- generate_discretes(n, vector3)
+table(discrete_realization) / n
+
+```
+
+Przechodzimy do następnego zadania.
+```{r czyszczenie środowiska 3}
+rm(list = ls())
 ```
 

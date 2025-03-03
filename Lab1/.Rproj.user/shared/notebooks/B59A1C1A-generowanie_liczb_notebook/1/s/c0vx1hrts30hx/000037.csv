@@ -1,3 +1,0 @@
-"0","plot(unif_walk$Sn, type = ""l"", ylab = ""Trajectory"") + abline(h = 0)"
-"1","integer(0)
-"

@@ -1,5 +1,0 @@
-"0","{"
-"0","hist(normal_vector, prob = TRUE)"
-"0","rug(normal_vector)"
-"0","curve(dnorm, from = -3, to = 3, add = TRUE)"
-"0","}"
