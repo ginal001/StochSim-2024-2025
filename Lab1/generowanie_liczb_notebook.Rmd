@@ -197,7 +197,7 @@ vector3 <- c(8, 12)
 discrete_realization <- generate_discretes(n, vector1)
 table(discrete_realization) / n
 
-sdiscrete_realization <- generate_discretes(n, vector2)
+discrete_realization <- generate_discretes(n, vector2)
 table(discrete_realization) / n
 
 discrete_realization <- generate_discretes(n, vector3)
