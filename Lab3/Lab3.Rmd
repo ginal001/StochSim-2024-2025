@@ -1,0 +1,60 @@
+---
+title: "Lab3"
+output: html_notebook
+---
+
+We are doing exercise 1.18 from lecture notes.
+```{r experiment with birds}
+
+bird_experiment_density <- function(n, distribution, ...){
+theta <- distribution(n, ...)
+V <- distribution(n, ...)
+observed <- ifelse(V < theta, theta,  1 - theta)
+
+return(observed)
+}
+
+hist(bird_experiment_density(200, runif, min = 0, max = 1))
+hist(bird_experiment_density(200, rbeta, shape1 = 2, shape2 = 1))
+
+ks.test(bird_experiment_density(200, rbeta, shape1 = 2, shape2 = 1), "pbeta", shape1 = 2, shape2 = 1)
+
+experiment <- bird_experiment_density(20000, rbeta, shape1 = 3, shape2 = 5)
+
+{
+plot(density(experiment)) 
+curve(x*(dbeta(x, 3, 5) + dbeta(1 - x, 3, 5)), add = TRUE)
+}
+```
+
+Now we are doing next exercise.
+```{r generate normal distribution}
+n <- 200000
+
+V1 <- runif(n, -1, 1)
+V2 <- runif(n, -1, 1)
+R2 <- V1 * V1 + V2 * V2
+
+V1 <- V1[R2 < 1]
+V2 <- V2[R2 < 1]
+R2 <- R2[R2 < 1]
+
+R2 <- sqrt(-2*log(R2) / R2)
+Z1 <- V1 * R2
+Z2 <- V2 * R2
+
+ks.test(Z2, "pnorm")
+cov(Z1, Z2)
+cov(cbind(Z1, Z2))
+```
+
+```{r next}
+n <- 20000
+
+X <- runif(n)
+U <- runif(n)
+
+U <- U[U < X]
+X <- X[U < X]
+hist(X)
+```
