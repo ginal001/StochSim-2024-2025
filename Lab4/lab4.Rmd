@@ -1,0 +1,57 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+We are focusing on generating normal distributiin.
+```{r}
+sigma_x1 <- 1
+sigma_x2 <- 0.5
+n <- 20000
+beta <- 2
+
+X1 <- rnorm(n, mean = 0, sigma_x1)
+X2 <- rnorm(n, mean = beta*X1, sigma_x2)
+
+
+plot(X1, X2) + abline(a = 0, b = beta)
+
+cov(cbind(X1, X2))
+```
+
+Then we know that $$(X_1, X_2)$$ has a distribution $$N(0, V)$$ with matrix: sigma_1^2, beta * sigma_1; beta * sigma_1, sigma_1^2 * beta^2 + sigma_2 ^ 2.
+
+
+```{r generating from normal distribution}
+Z1 <- rnorm(10000, mean = 0, sd = 1)
+Z2 <- rnorm(10000, mean = 0, sd = 1)
+
+V = matrix(c(1, 2, 2, 4.25), ncol = 2, nrow = 2)
+chol_V = chol(V)
+
+plot(t(t(chol_V) %*% t(cbind(Z1, Z2))))
+cov(t(t(chol_V) %*% t(cbind(Z1, Z2))))
+
+```
+
+We are generating distribution with density -log x.
+```{r}
+n <- 10000
+X1 <- runif(n)
+X <- runif(n, min = 0, max = X1)
+
+hist(X) 
+```
+
+
+We are generating random variable from given distribution (rest as homework).
+```{r}
+k <- 1
+n <- 1000
+
+U <- runif(n)
+Y <- U ^ (-1 / n)
+
+X <- rexp(1000, rate = Y)
+```
+
+
