@@ -1,0 +1,121 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Today we are going to generate Poisson process.
+```{r}
+n <- 500
+lambda <- 1
+
+Y <- rexp(n, rate =  lambda)
+jumps <- cumsum(Y)
+
+
+trajectory <- stepfun(jumps, c(0:length(jumps)))
+
+plot(trajectory)
+  
+```
+Another way to generate Poisson process.
+```{r}
+n <- 500
+
+uniforms <- runif(n - 1)
+plot(ecdf(uniforms))
+```
+Now we are going to estimate density.
+```{r}
+lambda <- 1
+t0 <- 2
+n_simulations <- 20000
+all_diffs <- vector()
+delta_plus <- vector()
+delta_minus <- vector()
+
+for (i in 1:n_simulations){
+  
+waiting_time <- 0
+
+while (waiting_time < t0){
+Y <- rexp(1, rate =  lambda)
+
+prev_waiting_time <- waiting_time
+waiting_time <- waiting_time + Y
+}
+
+all_diffs <- c(all_diffs, waiting_time - prev_waiting_time)
+delta_plus <- c(delta_plus, waiting_time)
+delta_minus <- c(delta_minus, prev_waiting_time)
+}
+
+#all_diffs
+#neighbors
+hist(all_diffs)
+hist(delta_plus)
+hist(delta_minus)
+```
+
+
+```{r}
+lambda <- 1
+t0 <- 0.001
+n_simulations <- 20000
+all_diffs <- vector()
+delta_plus <- vector()
+delta_minus <- vector()
+
+for (i in 1:n_simulations){
+  
+waiting_time <- 0
+
+while (waiting_time < t0){
+Y <- rexp(1, rate =  lambda)
+
+prev_waiting_time <- waiting_time
+waiting_time <- waiting_time + Y
+}
+
+all_diffs <- c(all_diffs, waiting_time - prev_waiting_time)
+delta_plus <- c(delta_plus, waiting_time)
+delta_minus <- c(delta_minus, prev_waiting_time)
+}
+
+#all_diffs
+#neighbors
+hist(all_diffs)
+hist(delta_plus)
+hist(delta_minus)
+```
+```{r}
+lambda <- 1
+t0 <- 200
+n_simulations <- 20000
+all_diffs <- vector()
+delta_plus <- vector()
+delta_minus <- vector()
+
+for (i in 1:n_simulations){
+  
+waiting_time <- 0
+
+while (waiting_time < t0){
+Y <- rexp(1, rate =  lambda)
+
+prev_waiting_time <- waiting_time
+waiting_time <- waiting_time + Y
+}
+
+all_diffs <- c(all_diffs, waiting_time - prev_waiting_time)
+delta_plus <- c(delta_plus, waiting_time)
+delta_minus <- c(delta_minus, prev_waiting_time)
+}
+
+#all_diffs
+#neighbors
+hist(all_diffs)
+hist(delta_plus)
+hist(-1*delta_minus)
+
+hist(delta_plus + delta_minus)
+```
