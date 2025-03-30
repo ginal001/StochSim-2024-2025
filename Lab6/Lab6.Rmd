@@ -1,0 +1,74 @@
+---
+title: "Lab 6"
+subtitle: "Markov Chains"
+author: "Piotr Ginalski"
+output: html_notebook
+---
+
+In this laboratory, we are going to consider simulating Markov Chain. Let's consider
+easy example of Random Walk with absorbing barriers.
+```{r random walk with absorbing barriers}
+simulate_absorbing_walk <- function(x0, k, p){
+  x <- x0
+  trajectory <- x0
+  while (x > 0 &&  x < k){
+    if (runif(1) < p){
+      x <- x + 1
+      trajectory <- c(trajectory, x)
+    }
+    else{
+      x <- x - 1
+      trajectory <- c(trajectory, x)
+    }
+  }
+  return(trajectory)
+}
+
+
+simulate_absorption <- function(x0, k, p, n_sim) {
+  count0 <- 0
+  countK <- 0
+  
+  for (i in 1:n_sim) {
+    trajectory <- simulate_absorbing_walk(x0, k, p)
+    final_state <- trajectory[length(trajectory)]
+    if (final_state == 0) {
+      count0 <- count0 + 1
+    } else {
+      countK <- countK + 1
+    }
+  }
+  
+  psi0 <- count0 / n_sim
+  psiK <- countK / n_sim
+  return(c(psi0 = psi0, psiK = psiK))
+}
+
+simulate_absorption(18, 20, 0.4, 20000)
+```
+And now we create random walk with elastic barriers.
+```{r random walk with elastic barriers}
+simulate_elastic_barriers_walk <- function(x0, k, p, n){
+  x <- x0
+  trajectory <- x0
+  for (i in 1:n){
+    if (runif(1) < p){
+      x <- min(x+1, k)
+      trajectory <- c(trajectory, x)
+    }
+    else{
+      x <- max(x-1, 0)
+      trajectory <- c(trajectory, x)
+    }
+  }
+  return(trajectory)
+}
+
+simulate_asymptotic <- function(x0, k, p, n, x){
+  trajectory <- simulate_elastic_barriers_walk(x0, k, p, n)
+  visits <- sum(trajectory == x)
+  return (visits / n)
+}
+
+simulate_asymptotic(5, 20, 0.2, 10000, 0)
+```
