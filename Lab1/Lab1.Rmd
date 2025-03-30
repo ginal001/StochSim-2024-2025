@@ -1,24 +1,25 @@
 ---
-title: "Lab 1"
+title: "Laboratory 1"
+subtitle: "Basics of generating random variables"
+author: "Piotr Ginalski"
 output: html_notebook
 ---
 
-Najpierw uczymy się generowania zmiennych losowych jednostajnych.
-
-```{r generowanie zmiennych jednostajnych}
+Firstly, let's generate uniform random variables.
+```{r generating uniform random variables}
 n <- 12
 
 set.seed(10)
 x <- runif(n)
 x
 ```
-Przybliżamy rozkład normalny używając CTG.
+We can easily approximate normal distribution by CLT.
 ```{r generowanie normalnego}
 normal_variable <- (sum(x) - n/2) / (sqrt(n/12))
 normal_variable
 ```
-Zapisujemy to wszystko jako funkcję. Zwraca ona realizację rozkładu normalnego.
-```{r funkcja do rozkladu normalnego}
+And we have a function which returns realization of normal distribution.
+```{r function for normal random variable}
 normal <- function(){
   n <- 12
   x <- runif(n)
@@ -27,26 +28,24 @@ normal <- function(){
 }
 normal()
 ```
-
-Generujemy m zmiennych losowych o rozkładzie normalnym, używając naszej funkcji.
-```{r uzycie funkcji}
+Generating $m$ realizations.
+```{r using function}
 m <- 200
 normal_vector <- vector()
 for (i in 1:m){
   normal_vector <- c(normal_vector, normal())
 }
 ```
-
-Dalej plotujemy nasze m realizacji rozkładu normalnego.
-```{r plotowanie wygenerowanych zmiennych}
+We plot the result.
+```{r plotting}
 {
 hist(normal_vector, prob = TRUE)
 rug(normal_vector)
 curve(dnorm, from = -3, to = 3, add = TRUE)
 }
 ```
-Rysujemy dystrybuantę empiryczną.
-```{r dystrybuanta empiryczna}
+Plotting the empirical cumulative distribution function.
+```{r empirical distribution}
 ecdf(normal_vector)
 {
 plot(ecdf(normal_vector))
@@ -54,10 +53,8 @@ curve(pnorm, from = -3, to = 3, add = TRUE)
 }
 ks.test(normal_vector, pnorm)
 ```
-
-
-Przechodzimy do innego zadania i definiujemy schemat Polya
-```{r generowanie zmiennych bernoulliego}
+Proceeding to another task and defining the Polya urn scheme
+```{r generating bernoullis}
 bern <- function(alfa, beta){
   x <- runif(1)
   return(as.integer(x < alfa / (alfa + beta)))
@@ -74,9 +71,8 @@ S <- cumsum(X)
 return(S)
 }
 ```
-
-Wykonajmy eksperyment Polyi.
-```{r powtarzanie eksperymentu}
+Performing the Polya experiment.
+```{r repeating experiment}
 alfa <- 1
 beta <- 1
 n <- 2000
@@ -88,12 +84,12 @@ for(i in 1:20){
   data_for_plot[name] <- results / (1:n)
 }
 
-# Tworzymy wykres z wykorzystaniem matplot
+# Creating plot
 matplot(data_for_plot$x, data_for_plot[, -1], type = "l", lty = 1,
-        xlab = "Indeks", ylab = "Wynik/Indeks", main = "Wyniki eksperymentów")
+        xlab = "Index", ylab = "Result/Index", main = "Results of experiments")
 ```
 
-```{r generowanie beta}
+```{r generating beta}
 generate_betas <- function(alfa, beta, n, m){
  betas <- vector()
 
@@ -119,14 +115,14 @@ ks.test(my_betas, "pbeta", shape1 = 0.5, shape2 = 0.5)
 my_betas <- generate_betas(5, 31, 200, 200)
 ks.test(my_betas, "pbeta", shape1 = 5, shape2 = 31)
 ```
-
-Przejdźmy do następnego zadania. Wyczyścmy środowisko.
-```{r czyszczenie środowiska}
+Proceeding to the next task. Clearing the environment.
+```{r clearing env}
 rm(list = ls())
 ```
-
-Robimy ćwiczenie 1.8 ze skryptu. Rozpatrujemy w nim prawo arcusa sinusa i definiujemy zmienną losową $T_n$ -- procent czasu w którym byliśmy na plusie w ciągu gier. Zdefiniujmy funkcję random_walk, w której argument distribution mówi z jakiego rozkładu losujemy $X_i$.
-```{r definicja Sn i Tn}
+Performing exercise 1.8 from the script.
+We consider the arcsine law and define the random variable T_n – the proportion of time we were positive during the games.
+The function random_walk takes an argument 'distribution' which specifies the distribution to sample X_i from.
+```{r definition Sn and Tn}
 random_walk <- function(distribution, n, ...){
 Sn <- cumsum(distribution(n, ...))
 Sn <- c(0, Sn)
@@ -163,12 +159,12 @@ realization_Tn <- generate_Tn(rnorm, 500, 50, mean = 0, sd = 1)
 ks.test(realization_Tn, "pbeta", shape1 = 1/2, shape2 = 1/2)
 ```
 
-Przejdźmy do następnego zadania. Wyczyścmy środowisko.
-```{r czyszczenie środowiska2}
+Proceeding to the next task. Clearing the environment.
+```{r clearing env 2}
 rm(list = ls())
 ```
 
-Tworzymy sobie zmienne dyskretne o ustalonych prawdopodobieństwach.
+Creating discrete variables with fixed probabilities.
 ```{r}
 argmin <- vector()
 
@@ -204,9 +200,8 @@ discrete_realization <- generate_discretes(n, vector3)
 table(discrete_realization) / n
 
 ```
-
-Przechodzimy do następnego zadania.
-```{r czyszczenie środowiska 3}
+And finally, let's clear environment.
+```{r clearing env 3}
 rm(list = ls())
 ```
 

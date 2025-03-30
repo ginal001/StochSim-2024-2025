@@ -1,8 +1,8 @@
 ---
-title: "R Notebook"
+title: "Lab 4"
 output: html_notebook
 ---
-We are focusing on generating normal distributiin.
+We are focusing on generating normal distribution.
 ```{r}
 sigma_x1 <- 1
 sigma_x2 <- 0.5
