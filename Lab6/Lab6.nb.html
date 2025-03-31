@@ -1759,55 +1759,20 @@ display: none;
 Let’s consider easy example of Random Walk with absorbing barriers.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2ltdWxhdGVfYWJzb3JiaW5nX3dhbGsgPC0gZnVuY3Rpb24oeDAsIGssIHApe1xuICB4IDwtIHgwXG4gIHRyYWplY3RvcnkgPC0geDBcbiAgd2hpbGUgKHggPiAwICYmICB4IDwgayl7XG4gICAgaWYgKHJ1bmlmKDEpIDwgcCl7XG4gICAgICB4IDwtIHggKyAxXG4gICAgICB0cmFqZWN0b3J5IDwtIGModHJhamVjdG9yeSwgeClcbiAgICB9XG4gICAgZWxzZXtcbiAgICAgIHggPC0geCAtIDFcbiAgICAgIHRyYWplY3RvcnkgPC0gYyh0cmFqZWN0b3J5LCB4KVxuICAgIH1cbiAgfVxuICByZXR1cm4odHJhamVjdG9yeSlcbn1cblxuXG5zaW11bGF0ZV9hYnNvcnB0aW9uIDwtIGZ1bmN0aW9uKHgwLCBrLCBwLCBuX3NpbSkge1xuICBjb3VudDAgPC0gMFxuICBjb3VudEsgPC0gMFxuICBcbiAgZm9yIChpIGluIDE6bl9zaW0pIHtcbiAgICB0cmFqZWN0b3J5IDwtIHNpbXVsYXRlX2Fic29yYmluZ193YWxrKHgwLCBrLCBwKVxuICAgIGZpbmFsX3N0YXRlIDwtIHRyYWplY3RvcnlbbGVuZ3RoKHRyYWplY3RvcnkpXVxuICAgIGlmIChmaW5hbF9zdGF0ZSA9PSAwKSB7XG4gICAgICBjb3VudDAgPC0gY291bnQwICsgMVxuICAgIH0gZWxzZSB7XG4gICAgICBjb3VudEsgPC0gY291bnRLICsgMVxuICAgIH1cbiAgfVxuICBcbiAgcHNpMCA8LSBjb3VudDAgLyBuX3NpbVxuICBwc2lLIDwtIGNvdW50SyAvIG5fc2ltXG4gIHJldHVybihjKHBzaTAgPSBwc2kwLCBwc2lLID0gcHNpSykpXG59XG5cbnNpbXVsYXRlX2Fic29ycHRpb24oMTgsIDIwLCAwLjQsIDIwMDAwKVxuYGBgIn0= -->
-<pre class="r"><code>simulate_absorbing_walk &lt;- function(x0, k, p){
-  x &lt;- x0
-  trajectory &lt;- x0
-  while (x &gt; 0 &amp;&amp;  x &lt; k){
-    if (runif(1) &lt; p){
-      x &lt;- x + 1
-      trajectory &lt;- c(trajectory, x)
-    }
-    else{
-      x &lt;- x - 1
-      trajectory &lt;- c(trajectory, x)
-    }
-  }
-  return(trajectory)
-}
-
-
-simulate_absorption &lt;- function(x0, k, p, n_sim) {
-  count0 &lt;- 0
-  countK &lt;- 0
-  
-  for (i in 1:n_sim) {
-    trajectory &lt;- simulate_absorbing_walk(x0, k, p)
-    final_state &lt;- trajectory[length(trajectory)]
-    if (final_state == 0) {
-      count0 &lt;- count0 + 1
-    } else {
-      countK &lt;- countK + 1
-    }
-  }
-  
-  psi0 &lt;- count0 / n_sim
-  psiK &lt;- countK / n_sim
-  return(c(psi0 = psi0, psiK = psiK))
-}
-
-simulate_absorption(18, 20, 0.4, 20000)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2ltdWxhdGVfYWJzb3JwdGlvbigxNSwgMjAsIDAuNCwgMTBeNSlcblxuYGBgIn0= -->
+<pre class="r"><code>simulate_absorption(15, 20, 0.4, 10^5)
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgcHNpMCAgICBwc2lLIFxuMC41NTQzNSAwLjQ0NTY1IFxuIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgcHNpMCAgICBwc2lLIFxuMC44Njg4NSAwLjEzMTE1IFxuIn0= -->
 <pre><code>   psi0    psiK 
-0.55435 0.44565 </code></pre>
+0.86885 0.13115 </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>And now we create random walk with elastic barriers.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2ltdWxhdGVfZWxhc3RpY19iYXJyaWVyc193YWxrIDwtIGZ1bmN0aW9uKHgwLCBrLCBwLCBuKXtcbiAgeCA8LSB4MFxuICB0cmFqZWN0b3J5IDwtIHgwXG4gIGZvciAoaSBpbiAxOm4pe1xuICAgIGlmIChydW5pZigxKSA8IHApe1xuICAgICAgeCA8LSBtaW4oeCsxLCBrKVxuICAgICAgdHJhamVjdG9yeSA8LSBjKHRyYWplY3RvcnksIHgpXG4gICAgfVxuICAgIGVsc2V7XG4gICAgICB4IDwtIG1heCh4LTEsIDApXG4gICAgICB0cmFqZWN0b3J5IDwtIGModHJhamVjdG9yeSwgeClcbiAgICB9XG4gIH1cbiAgcmV0dXJuKHRyYWplY3RvcnkpXG59XG5cbnNpbXVsYXRlX2FzeW1wdG90aWMgPC0gZnVuY3Rpb24oeDAsIGssIHAsIG4sIHgpe1xuICB0cmFqZWN0b3J5IDwtIHNpbXVsYXRlX2VsYXN0aWNfYmFycmllcnNfd2Fsayh4MCwgaywgcCwgbilcbiAgdmlzaXRzIDwtIHN1bSh0cmFqZWN0b3J5ID09IHgpXG4gIHJldHVybiAodmlzaXRzIC8gbilcbn1cblxuc2ltdWxhdGVfYXN5bXB0b3RpYyg1LCAyMCwgMC4yLCAxMDAwMCwgMClcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2ltdWxhdGVfZWxhc3RpY19iYXJyaWVyc193YWxrIDwtIGZ1bmN0aW9uKHgwLCBrLCBwLCBuKXtcbiAgeCA8LSB4MFxuICB0cmFqZWN0b3J5IDwtIHgwXG4gIGZvciAoaSBpbiAxOm4pe1xuICAgIGlmIChydW5pZigxKSA8IHApe1xuICAgICAgeCA8LSBtaW4oeCsxLCBrKVxuICAgICAgdHJhamVjdG9yeSA8LSBjKHRyYWplY3RvcnksIHgpXG4gICAgfVxuICAgIGVsc2V7XG4gICAgICB4IDwtIG1heCh4LTEsIDApXG4gICAgICB0cmFqZWN0b3J5IDwtIGModHJhamVjdG9yeSwgeClcbiAgICB9XG4gIH1cbiAgcmV0dXJuKHRyYWplY3RvcnkpXG59XG5cbnBsb3Qoc2ltdWxhdGVfZWxhc3RpY19iYXJyaWVyc193YWxrKDMsIDIwLCAwLjUsIDMwKSwgdHlwZSA9IFwibFwiKVxuXG5zaW11bGF0ZV9hc3ltcHRvdGljIDwtIGZ1bmN0aW9uKHgwLCBrLCBwLCBuLCB4KXtcbiAgdHJhamVjdG9yeSA8LSBzaW11bGF0ZV9lbGFzdGljX2JhcnJpZXJzX3dhbGsoeDAsIGssIHAsIG4pXG4gIHZpc2l0cyA8LSBzdW0odHJhamVjdG9yeSA9PSB4KVxuICByZXR1cm4gKHZpc2l0cyAvIG4pXG59XG5cblxucCA8LSAwLjNcbnEgPC0gMSAtIHBcbnggPC0gMFxuayA8LSAyMFxuXG5cbiMgV2UgY2FuIGNvbXBhcmUgb3VyIHNpbXVsYXRpb24gd2l0aCB0aGVvcmV0aWNhbCBmb3JtdWxhXG5wcmludChzaW11bGF0ZV9hc3ltcHRvdGljKHgwID0gNSwgayA9IDIwLCBwLCAxMDAwMCwgeCkpXG5wcmludCgoICgxIC0gcC9xKSAvICgxIC0gKHAvcSleKGsrMSkpKSAqIChwL3EpXih4KSApXG5gYGAifQ== -->
 <pre class="r"><code>simulate_elastic_barriers_walk &lt;- function(x0, k, p, n){
   x &lt;- x0
   trajectory &lt;- x0
@@ -1824,20 +1789,74 @@ simulate_absorption(18, 20, 0.4, 20000)</code></pre>
   return(trajectory)
 }
 
+plot(simulate_elastic_barriers_walk(3, 20, 0.5, 30), type = &quot;l&quot;)
+
 simulate_asymptotic &lt;- function(x0, k, p, n, x){
   trajectory &lt;- simulate_elastic_barriers_walk(x0, k, p, n)
   visits &lt;- sum(trajectory == x)
   return (visits / n)
 }
 
-simulate_asymptotic(5, 20, 0.2, 10000, 0)</code></pre>
+
+p &lt;- 0.3
+q &lt;- 1 - p
+x &lt;- 0
+k &lt;- 20
+
+
+# We can compare our simulation with theoretical formula
+print(simulate_asymptotic(x0 = 5, k = 20, p, 10000, x))
+print(( (1 - p/q) / (1 - (p/q)^(k+1))) * (p/q)^(x) )</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDAuNzQyXG4ifQ== -->
-<pre><code>[1] 0.742</code></pre>
-<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Let’s do next exercise.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYSA8LSAwLjRcbm5fdGltZSA8LSAyMFxueDAgPC0gMC41XG5cbm1hcmtvdl9jaGFpbl9jb250aW51b3VzIDwtIGZ1bmN0aW9uKHgwLCBhLCBuX3RpbWUpeyAgI3dlIGRvbnQgaGF2ZSB4MCBoZXJlXG4gIHByZXZfeCA8LSB4MFxuICB0cmFqZWN0b3J5IDwtIG51bWVyaWMobl90aW1lKVxuICBmb3IgKGkgaW4gMTpuX3RpbWUpe1xuICBpZiAocnVuaWYoMSkgPCBhKXtcbiAgICB4IDwtIHJ1bmlmKDEsIG1pbiA9IDAsIG1heCA9IHByZXZfeClcbiAgICB0cmFqZWN0b3J5W2ldIDwtIHhcbiAgfVxuICBlbHNle1xuICAgIHggPC0gcnVuaWYoMSwgbWluID0gcHJldl94LCBtYXggPSAxKVxuICAgIHRyYWplY3RvcnlbaV0gPC0geFxuICB9XG4gIHByZXZfeCA8LSB4XG59XG5yZXR1cm4odHJhamVjdG9yeSlcbn1cblxubWFya292X2NoYWluX2NvbnRpbnVvdXMoeDAsIDAuNCwgMjApXG5cblxueDAgPC0gMC4xXG57XG5oaXN0KG1hcmtvdl9jaGFpbl9jb250aW51b3VzKHgwLCAwLjQsIDIwMDAwMDApLCBwcm9iYWJpbGl0eSA9IFRSVUUpXG5jdXJ2ZShkYmV0YSh4LCBzaGFwZTEgPSAwLjYsIHNoYXBlMiA9IDAuNCksIGFkZD0gVFJVRSlcbn1cblxuYGBgIn0= -->
+<pre class="r"><code>a &lt;- 0.4
+n_time &lt;- 20
+x0 &lt;- 0.5
+
+markov_chain_continuous &lt;- function(x0, a, n_time){  #we dont have x0 here
+  prev_x &lt;- x0
+  trajectory &lt;- numeric(n_time)
+  for (i in 1:n_time){
+  if (runif(1) &lt; a){
+    x &lt;- runif(1, min = 0, max = prev_x)
+    trajectory[i] &lt;- x
+  }
+  else{
+    x &lt;- runif(1, min = prev_x, max = 1)
+    trajectory[i] &lt;- x
+  }
+  prev_x &lt;- x
+}
+return(trajectory)
+}
+
+markov_chain_continuous(x0, 0.4, 20)
+
+
+x0 &lt;- 0.1
+{
+hist(markov_chain_continuous(x0, 0.4, 2000000), probability = TRUE)
+curve(dbeta(x, shape1 = 0.6, shape2 = 0.4), add= TRUE)
+}
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubl90aW1lIDwtIDIwXG54MCA8LSAxLzJcbmEgPC0gMS8zXG5gYGAifQ== -->
+<pre class="r"><code>n_time &lt;- 20
+x0 &lt;- 1/2
+a &lt;- 1/3</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkxhYiA2Ig0Kc3VidGl0bGU6ICJNYXJrb3YgQ2hhaW5zIg0KYXV0aG9yOiAiUGlvdHIgR2luYWxza2kiDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpJbiB0aGlzIGxhYm9yYXRvcnksIHdlIGFyZSBnb2luZyB0byBjb25zaWRlciBzaW11bGF0aW5nIE1hcmtvdiBDaGFpbi4gTGV0J3MgY29uc2lkZXINCmVhc3kgZXhhbXBsZSBvZiBSYW5kb20gV2FsayB3aXRoIGFic29yYmluZyBiYXJyaWVycy4NCmBgYHtyIHJhbmRvbSB3YWxrIHdpdGggYWJzb3JiaW5nIGJhcnJpZXJzfQ0Kc2ltdWxhdGVfYWJzb3JiaW5nX3dhbGsgPC0gZnVuY3Rpb24oeDAsIGssIHApew0KICB4IDwtIHgwDQogIHRyYWplY3RvcnkgPC0geDANCiAgd2hpbGUgKHggPiAwICYmICB4IDwgayl7DQogICAgaWYgKHJ1bmlmKDEpIDwgcCl7DQogICAgICB4IDwtIHggKyAxDQogICAgICB0cmFqZWN0b3J5IDwtIGModHJhamVjdG9yeSwgeCkNCiAgICB9DQogICAgZWxzZXsNCiAgICAgIHggPC0geCAtIDENCiAgICAgIHRyYWplY3RvcnkgPC0gYyh0cmFqZWN0b3J5LCB4KQ0KICAgIH0NCiAgfQ0KICByZXR1cm4odHJhamVjdG9yeSkNCn0NCg0KDQpzaW11bGF0ZV9hYnNvcnB0aW9uIDwtIGZ1bmN0aW9uKHgwLCBrLCBwLCBuX3NpbSkgew0KICBjb3VudDAgPC0gMA0KICBjb3VudEsgPC0gMA0KICANCiAgZm9yIChpIGluIDE6bl9zaW0pIHsNCiAgICB0cmFqZWN0b3J5IDwtIHNpbXVsYXRlX2Fic29yYmluZ193YWxrKHgwLCBrLCBwKQ0KICAgIGZpbmFsX3N0YXRlIDwtIHRyYWplY3RvcnlbbGVuZ3RoKHRyYWplY3RvcnkpXQ0KICAgIGlmIChmaW5hbF9zdGF0ZSA9PSAwKSB7DQogICAgICBjb3VudDAgPC0gY291bnQwICsgMQ0KICAgIH0gZWxzZSB7DQogICAgICBjb3VudEsgPC0gY291bnRLICsgMQ0KICAgIH0NCiAgfQ0KICANCiAgcHNpMCA8LSBjb3VudDAgLyBuX3NpbQ0KICBwc2lLIDwtIGNvdW50SyAvIG5fc2ltDQogIHJldHVybihjKHBzaTAgPSBwc2kwLCBwc2lLID0gcHNpSykpDQp9DQoNCnNpbXVsYXRlX2Fic29ycHRpb24oMTgsIDIwLCAwLjQsIDIwMDAwKQ0KYGBgDQpBbmQgbm93IHdlIGNyZWF0ZSByYW5kb20gd2FsayB3aXRoIGVsYXN0aWMgYmFycmllcnMuDQpgYGB7ciByYW5kb20gd2FsayB3aXRoIGVsYXN0aWMgYmFycmllcnN9DQpzaW11bGF0ZV9lbGFzdGljX2JhcnJpZXJzX3dhbGsgPC0gZnVuY3Rpb24oeDAsIGssIHAsIG4pew0KICB4IDwtIHgwDQogIHRyYWplY3RvcnkgPC0geDANCiAgZm9yIChpIGluIDE6bil7DQogICAgaWYgKHJ1bmlmKDEpIDwgcCl7DQogICAgICB4IDwtIG1pbih4KzEsIGspDQogICAgICB0cmFqZWN0b3J5IDwtIGModHJhamVjdG9yeSwgeCkNCiAgICB9DQogICAgZWxzZXsNCiAgICAgIHggPC0gbWF4KHgtMSwgMCkNCiAgICAgIHRyYWplY3RvcnkgPC0gYyh0cmFqZWN0b3J5LCB4KQ0KICAgIH0NCiAgfQ0KICByZXR1cm4odHJhamVjdG9yeSkNCn0NCg0Kc2ltdWxhdGVfYXN5bXB0b3RpYyA8LSBmdW5jdGlvbih4MCwgaywgcCwgbiwgeCl7DQogIHRyYWplY3RvcnkgPC0gc2ltdWxhdGVfZWxhc3RpY19iYXJyaWVyc193YWxrKHgwLCBrLCBwLCBuKQ0KICB2aXNpdHMgPC0gc3VtKHRyYWplY3RvcnkgPT0geCkNCiAgcmV0dXJuICh2aXNpdHMgLyBuKQ0KfQ0KDQpzaW11bGF0ZV9hc3ltcHRvdGljKDUsIDIwLCAwLjIsIDEwMDAwLCAwKQ0KYGBg</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkxhYiA2Ig0Kc3VidGl0bGU6ICJNYXJrb3YgQ2hhaW5zIg0KYXV0aG9yOiAiUGlvdHIgR2luYWxza2kiDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpJbiB0aGlzIGxhYm9yYXRvcnksIHdlIGFyZSBnb2luZyB0byBjb25zaWRlciBzaW11bGF0aW5nIE1hcmtvdiBDaGFpbi4gTGV0J3MgY29uc2lkZXINCmVhc3kgZXhhbXBsZSBvZiBSYW5kb20gV2FsayB3aXRoIGFic29yYmluZyBiYXJyaWVycy4NCmBgYHtyIHJhbmRvbSB3YWxrIHdpdGggYWJzb3JiaW5nIGJhcnJpZXJzfQ0Kc2ltdWxhdGVfYWJzb3JiaW5nX3dhbGsgPC0gZnVuY3Rpb24oeDAsIGssIHApew0KICB4IDwtIHgwDQogIHRyYWplY3RvcnkgPC0geDANCiAgd2hpbGUgKHggPiAwICYmICB4IDwgayl7DQogICAgaWYgKHJ1bmlmKDEpIDwgcCl7DQogICAgICB4IDwtIHggKyAxDQogICAgICB0cmFqZWN0b3J5IDwtIGModHJhamVjdG9yeSwgeCkNCiAgICB9DQogICAgZWxzZXsNCiAgICAgIHggPC0geCAtIDENCiAgICAgIHRyYWplY3RvcnkgPC0gYyh0cmFqZWN0b3J5LCB4KQ0KICAgIH0NCiAgfQ0KICByZXR1cm4odHJhamVjdG9yeSkNCn0NCg0KDQpzaW11bGF0ZV9hYnNvcnB0aW9uIDwtIGZ1bmN0aW9uKHgwLCBrLCBwLCBuX3NpbSkgew0KICBjb3VudDAgPC0gMA0KICBjb3VudEsgPC0gMA0KICANCiAgZm9yIChpIGluIDE6bl9zaW0pIHsNCiAgICB0cmFqZWN0b3J5IDwtIHNpbXVsYXRlX2Fic29yYmluZ193YWxrKHgwLCBrLCBwKQ0KICAgIGZpbmFsX3N0YXRlIDwtIHRyYWplY3RvcnlbbGVuZ3RoKHRyYWplY3RvcnkpXQ0KICAgIGlmIChmaW5hbF9zdGF0ZSA9PSAwKSB7DQogICAgICBjb3VudDAgPC0gY291bnQwICsgMQ0KICAgIH0gZWxzZSB7DQogICAgICBjb3VudEsgPC0gY291bnRLICsgMQ0KICAgIH0NCiAgfQ0KICANCiAgcHNpMCA8LSBjb3VudDAgLyBuX3NpbQ0KICBwc2lLIDwtIGNvdW50SyAvIG5fc2ltDQogIHJldHVybihjKHBzaTAgPSBwc2kwLCBwc2lLID0gcHNpSykpDQp9DQoNCnNpbXVsYXRlX2Fic29ycHRpb24oNSwgMjAsIDAuNCwgMTBeNSkNCnNpbXVsYXRlX2Fic29ycHRpb24oMTUsIDIwLCAwLjQsIDEwXjUpDQoNCmBgYA0KQW5kIG5vdyB3ZSBjcmVhdGUgcmFuZG9tIHdhbGsgd2l0aCBlbGFzdGljIGJhcnJpZXJzLg0KYGBge3IgcmFuZG9tIHdhbGsgd2l0aCBlbGFzdGljIGJhcnJpZXJzfQ0Kc2ltdWxhdGVfZWxhc3RpY19iYXJyaWVyc193YWxrIDwtIGZ1bmN0aW9uKHgwLCBrLCBwLCBuKXsNCiAgeCA8LSB4MA0KICB0cmFqZWN0b3J5IDwtIHgwDQogIGZvciAoaSBpbiAxOm4pew0KICAgIGlmIChydW5pZigxKSA8IHApew0KICAgICAgeCA8LSBtaW4oeCsxLCBrKQ0KICAgICAgdHJhamVjdG9yeSA8LSBjKHRyYWplY3RvcnksIHgpDQogICAgfQ0KICAgIGVsc2V7DQogICAgICB4IDwtIG1heCh4LTEsIDApDQogICAgICB0cmFqZWN0b3J5IDwtIGModHJhamVjdG9yeSwgeCkNCiAgICB9DQogIH0NCiAgcmV0dXJuKHRyYWplY3RvcnkpDQp9DQoNCnBsb3Qoc2ltdWxhdGVfZWxhc3RpY19iYXJyaWVyc193YWxrKDMsIDIwLCAwLjUsIDMwKSwgdHlwZSA9ICJsIikNCg0Kc2ltdWxhdGVfYXN5bXB0b3RpYyA8LSBmdW5jdGlvbih4MCwgaywgcCwgbiwgeCl7DQogIHRyYWplY3RvcnkgPC0gc2ltdWxhdGVfZWxhc3RpY19iYXJyaWVyc193YWxrKHgwLCBrLCBwLCBuKQ0KICB2aXNpdHMgPC0gc3VtKHRyYWplY3RvcnkgPT0geCkNCiAgcmV0dXJuICh2aXNpdHMgLyBuKQ0KfQ0KDQoNCnAgPC0gMC4zDQpxIDwtIDEgLSBwDQp4IDwtIDANCmsgPC0gMjANCg0KDQojIFdlIGNhbiBjb21wYXJlIG91ciBzaW11bGF0aW9uIHdpdGggdGhlb3JldGljYWwgZm9ybXVsYQ0KcHJpbnQoc2ltdWxhdGVfYXN5bXB0b3RpYyh4MCA9IDUsIGsgPSAyMCwgcCwgMTAwMDAsIHgpKQ0KcHJpbnQoKCAoMSAtIHAvcSkgLyAoMSAtIChwL3EpXihrKzEpKSkgKiAocC9xKV4oeCkgKQ0KYGBgDQpMZXQncyBkbyBuZXh0IGV4ZXJjaXNlLg0KYGBge3Igc2ltdWxhdGluZyBtYXJrb3YgY2hhaW4gd2l0aCBjb250aW51b3VzIHNwYWNlfQ0KYSA8LSAwLjQNCm5fdGltZSA8LSAyMA0KeDAgPC0gMC41DQoNCm1hcmtvdl9jaGFpbl9jb250aW51b3VzIDwtIGZ1bmN0aW9uKHgwLCBhLCBuX3RpbWUpeyAgI3dlIGRvbnQgaGF2ZSB4MCBoZXJlDQogIHByZXZfeCA8LSB4MA0KICB0cmFqZWN0b3J5IDwtIG51bWVyaWMobl90aW1lKQ0KICBmb3IgKGkgaW4gMTpuX3RpbWUpew0KICBpZiAocnVuaWYoMSkgPCBhKXsNCiAgICB4IDwtIHJ1bmlmKDEsIG1pbiA9IDAsIG1heCA9IHByZXZfeCkNCiAgICB0cmFqZWN0b3J5W2ldIDwtIHgNCiAgfQ0KICBlbHNlew0KICAgIHggPC0gcnVuaWYoMSwgbWluID0gcHJldl94LCBtYXggPSAxKQ0KICAgIHRyYWplY3RvcnlbaV0gPC0geA0KICB9DQogIHByZXZfeCA8LSB4DQp9DQpyZXR1cm4odHJhamVjdG9yeSkNCn0NCg0KbWFya292X2NoYWluX2NvbnRpbnVvdXMoeDAsIDAuNCwgMjApDQoNCg0KeDAgPC0gMC4xDQp7DQpoaXN0KG1hcmtvdl9jaGFpbl9jb250aW51b3VzKHgwLCAwLjQsIDIwMDAwMDApLCBwcm9iYWJpbGl0eSA9IFRSVUUpDQpjdXJ2ZShkYmV0YSh4LCBzaGFwZTEgPSAwLjYsIHNoYXBlMiA9IDAuNCksIGFkZD0gVFJVRSkNCn0NCg0KYGBgDQoNCmBgYHtyIHRhc2sgMi4xMH0NCm5fdGltZSA8LSAyMA0KeDAgPC0gMS8yDQphIDwtIDEvMw0KYGBg</div>
 
 
 
