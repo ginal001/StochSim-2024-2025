@@ -1,5 +1,7 @@
 ---
-title: "Lab3"
+title: "Laboratory 3"
+subtitle: "Basics of generating random variables cd."
+author: "Piotr Ginalski"
 output: html_notebook
 ---
 
@@ -26,8 +28,7 @@ plot(density(experiment))
 curve(x*(dbeta(x, 3, 5) + dbeta(1 - x, 3, 5)), add = TRUE)
 }
 ```
-
-Now we are doing next exercise.
+Investigating other algorithm for generating normal distribution.
 ```{r generate normal distribution}
 n <- 200000
 
@@ -48,7 +49,7 @@ cov(Z1, Z2)
 cov(cbind(Z1, Z2))
 ```
 
-```{r next}
+```{r log density}
 n <- 20000
 
 X <- runif(n)

@@ -1,14 +1,16 @@
 ---
 title: "Lab 5"
+subtitle: "Poisson process"
+author: "Piotr Ginalski"
 output: html_notebook
 ---
 
 Today we are going to generate Poisson process.
-```{r}
+```{r generating Poisson process}
 n <- 500
 lambda <- 1
 
-Y <- rexp(n, rate =  lambda)
+Y <- rexp(n, rate =  lambda) # generating Poisson process from definition
 jumps <- cumsum(Y)
 
 
@@ -24,7 +26,8 @@ n <- 500
 uniforms <- runif(n - 1)
 plot(ecdf(uniforms))
 ```
-Now we are going to estimate density.
+
+Let's solve exercise 2.2 from lecture notes. We are waiting until waiting time is less than t0. Then we are going to consider next and prev time of jump and we are considering distribution of them. In next chunks, we are simulating Poisson process and estimate densities for different parameters (3 different chunks = 3 sets of parameters).
 ```{r}
 lambda <- 1
 t0 <- 2
@@ -45,15 +48,15 @@ waiting_time <- waiting_time + Y
 }
 
 all_diffs <- c(all_diffs, waiting_time - prev_waiting_time)
-delta_plus <- c(delta_plus, waiting_time)
-delta_minus <- c(delta_minus, prev_waiting_time)
+delta_plus <- c(delta_plus, waiting_time - t0)
+delta_minus <- c(delta_minus, t0 - prev_waiting_time)
 }
 
-#all_diffs
-#neighbors
 hist(all_diffs)
 hist(delta_plus)
 hist(delta_minus)
+
+hist(delta_plus - delta_minus)
 ```
 
 
@@ -77,15 +80,15 @@ waiting_time <- waiting_time + Y
 }
 
 all_diffs <- c(all_diffs, waiting_time - prev_waiting_time)
-delta_plus <- c(delta_plus, waiting_time)
-delta_minus <- c(delta_minus, prev_waiting_time)
+delta_plus <- c(delta_plus, waiting_time - t0)
+delta_minus <- c(delta_minus, t0 - prev_waiting_time)
 }
 
-#all_diffs
-#neighbors
 hist(all_diffs)
 hist(delta_plus)
 hist(delta_minus)
+
+hist(delta_plus - delta_minus)
 ```
 ```{r}
 lambda <- 1
@@ -107,15 +110,14 @@ waiting_time <- waiting_time + Y
 }
 
 all_diffs <- c(all_diffs, waiting_time - prev_waiting_time)
-delta_plus <- c(delta_plus, waiting_time)
-delta_minus <- c(delta_minus, prev_waiting_time)
+delta_plus <- c(delta_plus, waiting_time - t0)
+delta_minus <- c(delta_minus, t0 - prev_waiting_time)
 }
 
-#all_diffs
-#neighbors
+
 hist(all_diffs)
 hist(delta_plus)
-hist(-1*delta_minus)
+hist(delta_minus)
 
-hist(delta_plus + delta_minus)
+hist(delta_plus - delta_minus)
 ```

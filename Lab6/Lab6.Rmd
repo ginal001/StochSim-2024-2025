@@ -85,22 +85,22 @@ k <- 20
 print(simulate_asymptotic(x0 = 5, k = 20, p, 10000, x))
 print(( (1 - p/q) / (1 - (p/q)^(k+1))) * (p/q)^(x) )
 ```
-Let's do next exercise.
+Let's do next exercise. We are going to simulate Markov Chain with continuous state space.
 ```{r simulating markov chain with continuous space}
 a <- 0.4
 n_time <- 20
 x0 <- 0.5
 
-markov_chain_continuous <- function(x0, a, n_time){  #we dont have x0 here
-  prev_x <- x0
-  trajectory <- numeric(n_time)
-  for (i in 1:n_time){
+markov_chain_continuous <- function(x0, a, n_time){  
+  trajectory <- numeric(n_time + 1)
+  trajectory[1] <- x0
+  for (i in 2:(n_time + 1)){
   if (runif(1) < a){
-    x <- runif(1, min = 0, max = prev_x)
+    x <- runif(1, min = 0, max = trajectory[i - 1])
     trajectory[i] <- x
   }
   else{
-    x <- runif(1, min = prev_x, max = 1)
+    x <- runif(1, min = trajectory[i - 1], max = 1)
     trajectory[i] <- x
   }
   prev_x <- x
@@ -113,12 +113,12 @@ markov_chain_continuous(x0, 0.4, 20)
 
 x0 <- 0.1
 {
-hist(markov_chain_continuous(x0, 0.4, 2000000), probability = TRUE)
+hist(markov_chain_continuous(x0, 0.4, 200000), probability = TRUE)
 curve(dbeta(x, shape1 = 0.6, shape2 = 0.4), add= TRUE)
 }
 
 ```
-
+As a homework, we can do problem 2.10 from lecture notes.
 ```{r task 2.10}
 n_time <- 20
 x0 <- 1/2
