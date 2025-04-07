@@ -1,0 +1,79 @@
+---
+title: "Laboratory 7"
+subtitle: "Generating different experiments with Markovian structure"
+author: "Piotr Ginalski"
+output: html_notebook
+---
+
+We are doing exercise 2.6 from lecture notes. Firstly, we are creating toy example. Then we define a function which simulates AR(1) process. We are investigating stationarity of our process and answer the question about distribution of $X_n$.
+```{r ar1}
+n_times <- 3000
+X0 <- rnorm(1)
+trajectory <- numeric(n_times)
+alpha <- 1/2
+trajectory[1] <- X0
+
+for (i in (2:n_times)){
+trajectory[i] = alpha * trajectory[i-1] + rnorm(1)
+}
+head(trajectory)
+plot(trajectory, type = "l")
+
+
+generate_ar1 <- function(n_times, alpha, sd){
+  X0 <- 0
+  trajectory <- numeric(n_times)
+  randoms <- rnorm(n_times, mean = 0, sd = sd)
+  
+  for (i in (2:n_times)){
+  trajectory[i] = alpha * trajectory[i-1] + randoms[i]
+  }
+  return(trajectory)
+}
+
+plot(generate_ar1(400, 0.99, sd = 1), type = "l")
+plot(generate_ar1(400, 0.5, sd = 1), type = "l")
+plot(generate_ar1(400, 1.01, sd = 1), type = "l")
+
+
+trajectory_099 <- generate_ar1(30000000, 0.99, sd = 1)
+trajectory_05 <- generate_ar1(30000000, 0.5, sd = 1)
+
+hist(trajectory_099, freq = FALSE)
+hist(trajectory_05, freq = FALSE)
+var(trajectory_099)
+var(trajectory_05)
+```
+Let's clear the environment and proceed next task.
+```{r clearing env}
+rm(list = ls())
+```
+Let's simulate Markov process with continuous time.
+```{r}
+alpha <- 1
+beta <- 3
+start <- 1
+n_jumps <- 200
+time <- 0
+
+step <- function(state, alpha, beta){
+  if (state == 1){
+    return(c(rexp(alpha)))
+  }
+  else if (state == 2){
+    return(c(rexp(beta)))
+  }
+}
+
+
+trajectory <- vector()
+for (i in 1:n_jumps){
+  trajectory <- c(trajectory, step(i %% 2, alpha, beta))
+}
+
+# to consider
+```
+Clearing the environment.
+```{r clearing env2}
+rm(list = ls())
+```
