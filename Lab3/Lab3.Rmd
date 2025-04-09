@@ -1,8 +1,9 @@
 ---
 title: "Laboratory 3"
-subtitle: "Basics of generating random variables cd."
 author: "Piotr Ginalski"
-output: html_notebook
+subtitle: Basics of generating random variables cd.
+output:
+  html_notebook: default
 ---
 
 We are doing exercise 1.18 from lecture notes.
