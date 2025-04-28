@@ -1,0 +1,152 @@
+---
+title: "Lab9"
+subtitle: "Importance sampling"
+author: "Piotr Ginalski"
+date: "2025-04-14"
+output: html_document
+---
+
+As a first example, we are going to simulate random walk with different probability distribution of step.
+
+```{r, monte carlo, basic experiment}
+func <- rnorm
+start_point <- 10
+
+up_barrier <- 20
+down_barrier <- 0
+
+Z <- start_point
+while(Z >= down_barrier && Z <= up_barrier){
+  Z <- Z - func(1)
+}
+```
+
+Now we are going to pack it in function.
+
+```{r, creating functions}
+simulation <- function(start_point, up_barrier, down_barrier, func){
+  Z <- start_point
+  while(Z >= down_barrier && Z <= up_barrier){
+    Z <- Z - func(1)
+  }
+    return(ifelse(Z < down_barrier, 1, 0))
+}
+```
+
+Let's pack it in function for calculating probabilities for different distributions.
+
+```{r, function for many simulation}
+calculate_probability <-  function(start_point, up_barrier, down_barrier, func, n_sim){
+  outputs <- numeric(n_sim)
+for (i in 1:n_sim){
+  outputs[i] <- simulation(10, 20, 0, func)
+}
+
+paste("Estimator:", mean(outputs), "+-", 2*sd(outputs) / sqrt(n_sim))
+}
+```
+
+After definition of our function, let's calculate some examples.
+
+```{r, u = 0, var = 1}
+gen_norm <- function(x) rnorm(1, 0, 1)
+calculate_probability(10, 20, 0, gen_norm, 10000)
+```
+
+```{r, u = -0.1, var = 1}
+gen_norm <- function(x) rnorm(1, -0.1, 1)
+calculate_probability(10, 20, 0, gen_norm, 10000)
+```
+
+```{r, u = -0.2, var = 1}
+gen_norm <- function(x) rnorm(1, -0.2, 1)
+calculate_probability(10, 20, 0, gen_norm, 10000)
+```
+
+```{r, u = -0.3, var = 1}
+gen_norm <- function(x) rnorm(1, -0.3, 1)
+calculate_probability(10, 20, 0, gen_norm, 10000)
+```
+
+```{r, u = -0.4, var = 1}
+gen_norm <- function(x) rnorm(1, -0.4, 1)
+calculate_probability(10, 20, 0, gen_norm, 10000)
+```
+
+```{r, u = -0.5, var = 1}
+gen_norm <- function(x) rnorm(1, 0.5, 1)
+calculate_probability(10, 20, 0, gen_norm, 10000)
+```
+
+Now we are going to focus on importance sampling. Lets' clear an environment.
+
+```{r, clearing env}
+rm(list = ls())
+```
+
+```{r, importance sampling}
+
+
+weighted_simulation <- function(start_point, up_barrier, down_barrier, func, mean){
+  Z <- start_point
+  while(Z >= down_barrier && Z <= up_barrier){
+    Z <- Z - func(1)
+  }
+    return(ifelse(Z < down_barrier, 1, 0) * exp(2*mean*Z) * exp(-2*mean*start_point))
+}
+
+
+
+calculate_probability_weighted <-  function(start_point, up_barrier, down_barrier, func, mean, n_sim){
+  outputs <- numeric(n_sim)
+  for (i in 1:n_sim){
+    outputs[i] <- weighted_simulation(10, 20, 0, func, mean)
+  }
+
+paste("Estimator:", mean(outputs), "+-", 2*sd(outputs) / sqrt(n_sim))
+}
+```
+
+Let's use our function!
+
+```{r}
+mean <- 0
+sd <- 1
+
+gen_norm <- function(x) rnorm(1, mean, sd)
+calculate_probability_weighted(10, 20, 0, gen_norm, mean, 10000)
+```
+
+
+```{r}
+mean <- 0.1
+sd <- 1
+
+gen_norm <- function(x) rnorm(1, mean, sd)
+calculate_probability_weighted(10, 20, 0, gen_norm, mean, 10000)
+```
+
+
+```{r}
+mean <- 0.2
+sd <- 1
+
+gen_norm <- function(x) rnorm(1, mean, sd)
+calculate_probability_weighted(10, 20, 0, gen_norm, mean, 10000)
+```
+
+```{r}
+mean <- 0.3
+sd <- 1
+
+gen_norm <- function(x) rnorm(1, mean, sd)
+calculate_probability_weighted(10, 20, 0, gen_norm, mean, 10000)
+```
+
+```{r}
+mean <- 0.5
+sd <- 1
+
+gen_norm <- function(x) rnorm(1, mean, sd)
+calculate_probability_weighted(10, 20, 0, gen_norm, mean, 10000)
+```
