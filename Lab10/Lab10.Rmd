@@ -1,0 +1,93 @@
+---
+title: "Lab10"
+subtitle: "Importance sampling -- SAW"
+author: "Piotr Ginalski"
+date: "2025-04-14"
+output: html_document
+---
+
+Today, we are going to create SAWs.
+
+```{r monte carlo SAW}
+
+directions <- list(c(1,0), c(0,1), c(-1, 0), c(0, -1))
+path_size <- 3
+map <- matrix(0, 2*path_size+1, 2*path_size+1)
+current_position <- c(path_size + 1, path_size + 1)
+
+map[current_position[1], current_position[2]] = 1
+number_of_possibilities <- 1
+  
+  for(k in (1:path_size)){
+    possibilities <- list()
+    current_possibilities <- 0
+    for (direction in directions){
+      checked_direction <- current_position + direction
+      if (map[checked_direction[1], checked_direction[2]] == 0){
+        possibilities <- c(possibilities, list(c(checked_direction[1], checked_direction[2])))
+        current_possibilities <- current_possibilities + 1
+      }
+    }
+    
+    number_of_possibilities <- number_of_possibilities * current_possibilities
+    
+    if(current_possibilities ==0) return(0)
+    current_position <- sample(possibilities, 1)[[1]]
+    map[current_position[1], current_position[2]] <-  k + 1
+  }
+
+
+print(map)
+print(number_of_possibilities)
+```
+Let's create simulation of that.
+```{r simulating saw}
+
+saw_simulation <- function(path_size, show_map = FALSE){
+  
+  directions <- list(c(1,0), c(0,1), c(-1, 0), c(0, -1))
+  map <- matrix(0, 2*path_size+1, 2*path_size+1)
+  current_position <- c(path_size + 1, path_size + 1)
+  
+  map[current_position[1], current_position[2]] = 1
+  number_of_possibilities <- 1
+  
+  for(k in (1:path_size)){
+    possibilities <- list()
+    current_possibilities <- 0
+    for (direction in directions){
+      checked_direction <- current_position + direction
+      if (map[checked_direction[1], checked_direction[2]] == 0){
+        possibilities <- c(possibilities, list(c(checked_direction[1], checked_direction[2])))
+        current_possibilities <- current_possibilities + 1
+      }
+    }
+    
+    number_of_possibilities <- number_of_possibilities * current_possibilities
+    
+    if(current_possibilities ==0) return(0)
+    current_position <- sample(possibilities, 1)[[1]]
+    map[current_position[1], current_position[2]] <-  k + 1
+  }
+  
+  if (show_map == TRUE){
+    print(map)
+  }
+  
+  return (number_of_possibilities)
+}
+
+calculate_saws <- function(path_size, n_simulations) {
+  results <- numeric(n_simulations)
+  
+  for (i in seq_len(n_simulations)) {
+    results[i] <- saw_simulation(path_size)  
+  }
+  
+  return(results)         
+}
+
+tmp <- calculate_saws(10, 100000)
+mean(tmp)
+sd(tmp)
+```
