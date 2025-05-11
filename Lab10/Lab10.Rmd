@@ -6,67 +6,81 @@ date: "2025-04-14"
 output: html_document
 ---
 
-Today, we are going to create SAWs.
+Today, we are going to create Self Avoiding Walks and estimate number of them. 
 
 ```{r monte carlo SAW}
 
-directions <- list(c(1,0), c(0,1), c(-1, 0), c(0, -1))
+directions <- matrix(
+    c( 1,  0,
+       0,  1,
+      -1,  0,
+       0, -1),
+    ncol = 2, byrow = TRUE
+  )
+
+
 path_size <- 3
 map <- matrix(0, 2*path_size+1, 2*path_size+1)
 current_position <- c(path_size + 1, path_size + 1)
-
 map[current_position[1], current_position[2]] = 1
-number_of_possibilities <- 1
+
+weight <- 1
   
   for(k in (1:path_size)){
-    possibilities <- list()
-    current_possibilities <- 0
-    for (direction in directions){
-      checked_direction <- current_position + direction
-      if (map[checked_direction[1], checked_direction[2]] == 0){
-        possibilities <- c(possibilities, list(c(checked_direction[1], checked_direction[2])))
-        current_possibilities <- current_possibilities + 1
-      }
-    }
     
-    number_of_possibilities <- number_of_possibilities * current_possibilities
+    checked_direction <- cbind(
+      directions[,1] + current_position[1],
+      directions[,2] + current_position[2]
+    )
     
-    if(current_possibilities ==0) return(0)
-    current_position <- sample(possibilities, 1)[[1]]
+    possibilities <- which(map[checked_direction] == 0)
+    number_of_possibilities <- length(possibilities)
+    
+    weight <- weight * number_of_possibilities
+    
+    if(number_of_possibilities == 0) break
+    current_position <- checked_direction[sample(possibilities, 1),]
     map[current_position[1], current_position[2]] <-  k + 1
   }
 
 
 print(map)
-print(number_of_possibilities)
+print(weight)
 ```
-Let's create simulation of that.
+Let's pack it into function. 
+
 ```{r simulating saw}
 
 saw_simulation <- function(path_size, show_map = FALSE){
   
-  directions <- list(c(1,0), c(0,1), c(-1, 0), c(0, -1))
-  map <- matrix(0, 2*path_size+1, 2*path_size+1)
-  current_position <- c(path_size + 1, path_size + 1)
-  
-  map[current_position[1], current_position[2]] = 1
-  number_of_possibilities <- 1
+  directions <- matrix(
+    c( 1,  0,
+       0,  1,
+      -1,  0,
+       0, -1),
+    ncol = 2, byrow = TRUE
+  )
+
+map <- matrix(0, 2*path_size+1, 2*path_size+1)
+current_position <- c(path_size + 1, path_size + 1)
+map[current_position[1], current_position[2]] = 1
+
+weight <- 1
   
   for(k in (1:path_size)){
-    possibilities <- list()
-    current_possibilities <- 0
-    for (direction in directions){
-      checked_direction <- current_position + direction
-      if (map[checked_direction[1], checked_direction[2]] == 0){
-        possibilities <- c(possibilities, list(c(checked_direction[1], checked_direction[2])))
-        current_possibilities <- current_possibilities + 1
-      }
-    }
     
-    number_of_possibilities <- number_of_possibilities * current_possibilities
+    checked_direction <- cbind(
+      directions[,1] + current_position[1],
+      directions[,2] + current_position[2]
+    )
     
-    if(current_possibilities ==0) return(0)
-    current_position <- sample(possibilities, 1)[[1]]
+    possibilities <- which(map[checked_direction] == 0)
+    number_of_possibilities <- length(possibilities)
+    
+    weight <- weight * number_of_possibilities
+    
+    if(number_of_possibilities == 0) return(0)
+    current_position <- checked_direction[sample(possibilities, 1),]
     map[current_position[1], current_position[2]] <-  k + 1
   }
   
@@ -74,8 +88,9 @@ saw_simulation <- function(path_size, show_map = FALSE){
     print(map)
   }
   
-  return (number_of_possibilities)
+  return (weight)
 }
+
 
 calculate_saws <- function(path_size, n_simulations) {
   results <- numeric(n_simulations)
@@ -87,7 +102,9 @@ calculate_saws <- function(path_size, n_simulations) {
   return(results)         
 }
 
-tmp <- calculate_saws(10, 100000)
-mean(tmp)
-sd(tmp)
+
+n_simulations <-10000
+saws_6 <- calculate_saws(6, n_simulations)
+mean(saws_6)
+sd(saws_6) / sqrt(n_simulations)
 ```
