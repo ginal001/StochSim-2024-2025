@@ -104,7 +104,7 @@ calculate_saws <- function(path_size, n_simulations) {
 
 
 n_simulations <-10000
-saws_6 <- calculate_saws(6, n_simulations)
+saws_6 <- calculate_saws(30, n_simulations)
 mean(saws_6)
-sd(saws_6) / sqrt(n_simulations)
+2*sd(saws_6) / sqrt(n_simulations)
 ```
