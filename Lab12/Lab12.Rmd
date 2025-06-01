@@ -1,0 +1,106 @@
+---
+title: "Lab12"
+subtitle: "Gibbs Sampler"
+author: "Piotr Ginalski"
+date: "2025-05-26"
+output: html_document
+---
+
+Today we are going to see some examples of usage of Gibbs sampler. 
+```{r example}
+len <-2000
+
+n <- 5
+s2 <- 5
+y_bar <- 0
+m <- 5
+v2 <- 0.2
+
+
+mi_list <- numeric(len)   # mi
+kappa_list <- numeric(len)  # kappa
+kappa_list[1] <- 1
+
+for(i in (2:len)){
+  kappa <- kappa_list[i - 1]
+  random_first <- rnorm(1, mean = (n*kappa*y_bar/(n*kappa + v2)) + ( (v2/(n*kappa + v2)) * m), sd = 1/(kappa*n + v2))
+  mi_list[i] <- random_first
+  
+  mi <- mi_list[i]
+  random_second <- rgamma(1, shape = n/2, rate = s2/2 + (n/2)*(mi - y_bar)*(mi - y_bar))
+  kappa_list[i] <- random_second
+}
+
+
+plot(mi_list[100:len], kappa_list[100:len], pch =".")
+
+mean(mi_list[100:len])
+mean(kappa_list[100:len])
+sd(mi_list[100:len])
+sd(kappa_list[100:len])
+```
+
+Next, we consider autologistic model.
+```{r autologistic model}
+# Parameters
+n_sim <- 2000
+burn  <- 500
+d     <- 5
+theta <- matrix(0, d, d)
+theta[row(theta) == col(theta) - 1] <- -1
+theta[row(theta) == col(theta) + 1] <- -1
+mu <- rep(2, d)                      
+
+# Experiment
+X <- matrix(0, n_sim, d)
+
+for (i in 2:n_sim) {
+  x <- X[i - 1, ]                    
+  for (j in 1:d) {
+    eta <- mu[j] + sum(theta[j, ] * x)  
+    p   <- 1 / (1 + exp(-eta))
+    x[j] <- rbinom(1, 1, p)
+  }
+  X[i, ] <- x
+}
+
+# Simple statistics
+colMeans(X[(burn + 1):n_sim, ])
+cov(X[(burn + 1):n_sim, ])
+image(X[(burn + 1):n_sim, ])
+```
+
+Let's pack it into function.
+```{r autologistic model - function}
+simulate_autologistic <- function(n_sim, burn, theta){
+
+d <- ncol(theta)
+X <- matrix(0, n_sim, d)
+
+mu <- diag(theta)
+diag(theta) <- 0
+
+for (i in 2:n_sim) {
+  x <- X[i - 1, ]                    
+  for (j in 1:d) {
+    eta <- mu[j] + sum(theta[j, ] * x)  
+    p   <- 1 / (1 + exp(-eta))
+    x[j] <- rbinom(1, 1, p)
+  }
+  X[i, ] <- x
+}
+return (X[(burn + 1):n_sim, ])
+}
+```
+
+```{r test}
+theta <- matrix(0, d, d)
+theta[row(theta) == col(theta) - 1] <- -1
+theta[row(theta) == col(theta) + 1] <- -1
+diag(theta) <- 2
+
+simulations <- simulate_autologistic(20000, 500, theta)
+colMeans(simulations)
+cov(simulations)
+image(simulations)
+```
