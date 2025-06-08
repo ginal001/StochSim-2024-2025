@@ -2,7 +2,8 @@
 title: "Laboratory 4"
 subtitle: "Generating multivariate normal distribution"
 author: "Piotr Ginalski"
-output: html_notebook
+output:
+  pdf_document: default
 ---
 We are focusing on generating normal distribution.
 ```{r}

@@ -2,7 +2,8 @@
 title: "Laboratory 7"
 subtitle: "Generating different experiments with Markovian structure"
 author: "Piotr Ginalski"
-output: html_notebook
+output:
+  pdf_document: default
 ---
 
 We are doing exercise 2.6 from lecture notes. Firstly, we are creating toy example. Then we define a function which simulates AR(1) process. We are investigating stationarity of our process and answer the question about distribution of $X_n$.

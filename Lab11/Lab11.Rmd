@@ -3,7 +3,8 @@ title: "Lab11"
 subtitle: "Asymptotic Variance"
 author: "Piotr Ginalski"
 date: "2025-04-14"
-output: html_document
+output:
+  pdf_document: default
 ---
 
 Today we are going to calculate asymptotic variance.

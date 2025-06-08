@@ -2,7 +2,8 @@
 title: "Lab 5"
 subtitle: "Poisson process"
 author: "Piotr Ginalski"
-output: html_notebook
+output:
+  pdf_document: default
 ---
 
 Today we are going to generate Poisson process.
@@ -19,7 +20,9 @@ trajectory <- stepfun(jumps, c(0:length(jumps)))
 plot(trajectory)
   
 ```
+
 Another way to generate Poisson process.
+
 ```{r}
 n <- 500
 

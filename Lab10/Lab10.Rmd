@@ -3,7 +3,8 @@ title: "Lab10"
 subtitle: "Importance sampling -- SAW"
 author: "Piotr Ginalski"
 date: "2025-04-14"
-output: html_document
+output:
+  pdf_document: default
 ---
 
 Today, we are going to create Self Avoiding Walks and estimate number of them. 

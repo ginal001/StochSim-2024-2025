@@ -2,7 +2,8 @@
 title: "Lab 6"
 subtitle: "Markov Chains"
 author: "Piotr Ginalski"
-output: html_notebook
+output:
+  pdf_document: default
 ---
 
 In this laboratory, we are going to consider simulating Markov Chain. Let's consider

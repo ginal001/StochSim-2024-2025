@@ -4,7 +4,6 @@ author: "Piotr Ginalski"
 subtitle: Basics of generating random variables
 output:
   pdf_document: default
-  html_notebook: default
 ---
 
 Firstly, let's generate uniform random variables.

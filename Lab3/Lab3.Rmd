@@ -3,7 +3,7 @@ title: "Laboratory 3"
 author: "Piotr Ginalski"
 subtitle: Basics of generating random variables cd.
 output:
-  html_notebook: default
+  pdf_document: default
 ---
 
 We are doing exercise 1.18 from lecture notes.

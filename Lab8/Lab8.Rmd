@@ -3,7 +3,8 @@ title: "Lab8"
 subtitle: "Generating Markov process with continuous state space and Monte Carlo methods"
 author: "Piotr Ginalski"
 date: "2025-04-14"
-output: html_document
+output:
+  pdf_document: default
 ---
 
 Let's generate Markov process with continuous state space. We are going to simulate two Poisson processes - one for Poisson(alpha) and second for Poisson(beta). From them we are going to simulate final process and plot the trajectory.

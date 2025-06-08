@@ -3,7 +3,8 @@ title: "Lab9"
 subtitle: "Importance sampling"
 author: "Piotr Ginalski"
 date: "2025-04-14"
-output: html_document
+output:
+  pdf_document: default
 ---
 
 As a first example, we are going to simulate random walk with different probability distribution of step.
