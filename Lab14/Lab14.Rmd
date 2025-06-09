@@ -1,0 +1,59 @@
+---
+title: "Lab14"
+subtitle: "Boltzmann Machines"
+author: "Piotr Ginalski"
+date: "2025-06-09"
+output:
+  pdf_document: default
+---
+
+Today, we are going to investigate Boltzmann Machines.
+
+```{r}
+W  = matrix(c(1,0,0,1,-1,0,0,-1,1,0,0,1), nrow = 4, byrow = TRUE)
+
+v_init = rep(0, 4)
+h_init = rep(0, 3)
+
+b_i = c(0,0,0,0)
+c_j = c(0,0,0)
+
+beta = 2 
+
+n_sim = 10000
+
+h = h_init
+v = v_init
+h_trajectory = matrix(0, ncol = length(h), nrow = n_sim)
+v_trajectory = matrix(0, ncol = length(v), nrow = n_sim)
+
+
+for(n in 1:n_sim){
+  eta = -beta*(-W %*% h - b_i) 
+  v = ( runif(length(v)) < (exp(eta) / (1 + exp(eta))) )
+  v = as.integer(v)
+  v_trajectory[n,] = v
+  
+  theta = -beta*(-t(W) %*% v - c_j) 
+  h = ( runif(length(h)) < (exp(theta) / (1 + exp(theta))) )
+  h = as.integer(h)
+  h_trajectory[n, ] = h
+}
+
+
+
+apply(v_trajectory, 2, mean)
+apply(h_trajectory, 2, mean)
+
+barplot(v_trajectory)
+barplot(h_trajectory)
+
+cor(h_trajectory, v_trajectory)
+
+#h_trajectory
+image(cor(h_trajectory, v_trajectory))
+```
+```{r}
+
+
+```
